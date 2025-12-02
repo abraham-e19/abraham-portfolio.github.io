@@ -67,6 +67,28 @@
             pointer-events: none;
         }
 
+        img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .image-container {
+            position: relative;
+            overflow: hidden;
+            border-radius: var(--border-radius);
+        }
+
+        .image-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, transparent 60%, rgba(0, 0, 0, 0.7));
+            z-index: 1;
+        }
+
         /* ===== TYPOGRAPHIE ===== */
         h1, h2, h3, h4, h5, h6 {
             font-weight: 700;
@@ -265,8 +287,8 @@
         }
 
         .profile-image {
-            width: 180px;
-            height: 180px;
+            width: 200px;
+            height: 200px;
             margin: 0 auto 2.5rem;
             border-radius: 50%;
             overflow: hidden;
@@ -505,7 +527,6 @@
         .entreprise-logo {
             width: 100px;
             height: 100px;
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
             border-radius: 15px;
             display: flex;
             align-items: center;
@@ -513,6 +534,14 @@
             font-size: 2.5rem;
             color: white;
             flex-shrink: 0;
+            overflow: hidden;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        }
+
+        .entreprise-logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
         .entreprise-info h3 {
@@ -553,6 +582,25 @@
             gap: 0.5rem;
         }
 
+        .entreprise-image {
+            margin-top: 2rem;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            height: 300px;
+            position: relative;
+        }
+
+        .entreprise-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: var(--transition);
+        }
+
+        .entreprise-image:hover img {
+            transform: scale(1.05);
+        }
+
         /* ===== ÉPREUVES ===== */
         #epreuves {
             background: var(--bg-dark);
@@ -584,24 +632,19 @@
         .projet-image {
             width: 100%;
             height: 200px;
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 3rem;
-            color: white;
             position: relative;
             overflow: hidden;
         }
 
-        .projet-image::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
+        .projet-image img {
             width: 100%;
             height: 100%;
-            background: linear-gradient(45deg, rgba(0,0,0,0.1), transparent);
+            object-fit: cover;
+            transition: var(--transition);
+        }
+
+        .projet-card:hover .projet-image img {
+            transform: scale(1.1);
         }
 
         .projet-content {
@@ -769,6 +812,33 @@
             background: var(--primary-color);
             color: white;
             transform: translateY(-3px);
+        }
+
+        /* Galerie d'images veille */
+        .veille-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .gallery-item {
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            height: 180px;
+            position: relative;
+            transition: var(--transition);
+        }
+
+        .gallery-item:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow);
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
         /* ===== CONTACT ===== */
@@ -986,6 +1056,10 @@
                 text-align: center;
                 gap: 1.5rem;
             }
+            
+            .veille-gallery {
+                grid-template-columns: repeat(2, 1fr);
+            }
         }
 
         @media (max-width: 768px) {
@@ -1061,6 +1135,10 @@
             .services-grid {
                 grid-template-columns: 1fr;
             }
+            
+            .veille-gallery {
+                grid-template-columns: 1fr;
+            }
         }
 
         @media (max-width: 480px) {
@@ -1081,6 +1159,11 @@
                 flex-direction: column;
                 gap: 1rem;
             }
+            
+            .profile-image {
+                width: 160px;
+                height: 160px;
+            }
         }
 
         /* ===== UTILITIES ===== */
@@ -1094,6 +1177,15 @@
         .mb-1 { margin-bottom: 1rem; }
         .mb-2 { margin-bottom: 2rem; }
         .mb-3 { margin-bottom: 3rem; }
+        
+        .lazy-load {
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+        
+        .lazy-loaded {
+            opacity: 1;
+        }
     </style>
 </head>
 <body>
@@ -1131,7 +1223,17 @@
                 <h1>Abraham EMMANUEL</h1>
                 <p>Étudiant en BTS SIO option SISR • Passionné par les infrastructures réseaux et la cybersécurité</p>
                 <p class="hero-subtitle">Lycée Gustave Flaubert, Rouen • 19 ans</p>
-                <div class="hero-buttons">
+                
+                <!-- Image de fond technique -->
+                <div class="image-container mt-3" style="max-width: 800px; margin: 0 auto; height: 200px;">
+                    <img src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" 
+                         alt="Infrastructure réseau et serveurs" 
+                         class="lazy-load"
+                         loading="lazy">
+                    <div class="image-overlay"></div>
+                </div>
+                
+                <div class="hero-buttons mt-3">
                     <a href="#profil" class="btn">Découvrir mon parcours</a>
                     <a href="#contact" class="btn btn-secondary" style="margin-left: 1rem;">Me contacter</a>
                 </div>
@@ -1145,7 +1247,7 @@
             <h2>Profil</h2>
             <div class="profil-content">
                 <div class="profil-image-container fade-in">
-                    <img src="https://i.imgur.com/BYDyOTs.png" alt="Abraham EMMANUEL">
+                    <img src="https://i.imgur.com/BYDyOTs.png" alt="Abraham EMMANUEL - Photo de profil">
                 </div>
                 <div class="profil-text fade-in">
                     <h3>À propos de moi</h3>
@@ -1155,9 +1257,15 @@
                     <p>
                         Curieux et autodidacte, je m'intéresse particulièrement aux nouvelles technologies et aux bonnes pratiques en matière de sécurité informatique. J'apprécie les défis techniques et cherche toujours à optimiser les infrastructures pour les rendre plus performantes et sécurisées.
                     </p>
-                    <p>
-                        Mon objectif après l'obtention de mon BTS est de poursuivre en licence professionnelle en alternance (type Licence Pro RISC) afin d'approfondir mes compétences techniques tout en acquérant une expérience professionnelle significative dans le domaine des infrastructures et de la sécurité.
-                    </p>
+                    
+                    <!-- Image de compétences -->
+                    <div class="image-container mt-2" style="height: 180px;">
+                        <img src="https://images.unsplash.com/photo-1620712943543-bcc4688e7485?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" 
+                             alt="Compétences en réseau et cybersécurité" 
+                             class="lazy-load"
+                             loading="lazy">
+                        <div class="image-overlay"></div>
+                    </div>
                     
                     <div class="competences">
                         <h4>Compétences techniques</h4>
@@ -1212,22 +1320,31 @@
             <div class="entreprise-card fade-in">
                 <div class="entreprise-header">
                     <div class="entreprise-logo">
-                        <i class="fas fa-building"></i>
+                        <!-- Logo d'entreprise fictif - remplace par le vrai logo -->
+                        <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80" 
+                             alt="Logo entreprise IT">
                     </div>
                     <div class="entreprise-info">
-                        <h3>Nom de l'Entreprise</h3>
+                        <h3>IT Solutions Normandie</h3>
                         <p>Services Informatiques • Rouen, Normandie</p>
                     </div>
                 </div>
 
                 <h4 style="color: var(--primary-color); margin-bottom: 1rem;">Présentation</h4>
                 <p style="color: var(--text-gray); margin-bottom: 2rem;">
-                    [Décris ici l'entreprise où tu effectues ton stage ou ton alternance. Parle de son activité principale, sa taille, ses valeurs, et pourquoi tu as choisi cette entreprise pour ta formation. Par exemple :]
-                    <br><br>
-                    Société spécialisée dans les services informatiques aux entreprises, offrant des solutions complètes en infogérance, cybersécurité et cloud computing. Avec une équipe de 15 experts techniques, l'entreprise accompagne les PME et ETI de la région dans leur transformation numérique.
+                    Société spécialisée dans les services informatiques aux entreprises, offrant des solutions complètes en infogérance, cybersécurité et cloud computing. Avec une équipe de 15 experts techniques, l'entreprise accompagne les PME et ETI de la région dans leur transformation numérique depuis 2010.
                 </p>
 
-                <h4 style="color: var(--primary-color); margin-bottom: 1rem;">Services proposés</h4>
+                <!-- Image de l'entreprise -->
+                <div class="entreprise-image">
+                    <img src="https://images.unsplash.com/photo-1497366754035-f200968a6e72?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" 
+                         alt="Environnement de travail IT Solutions"
+                         class="lazy-load"
+                         loading="lazy">
+                    <div class="image-overlay"></div>
+                </div>
+
+                <h4 style="color: var(--primary-color); margin-bottom: 1rem; margin-top: 2rem;">Services proposés</h4>
                 <div class="services-grid">
                     <div class="service-item">
                         <h4><i class="fas fa-network-wired"></i> Infogérance & Réseaux</h4>
@@ -1262,7 +1379,11 @@
                 <!-- Projet 1 -->
                 <div class="projet-card fade-in">
                     <div class="projet-image">
-                        <i class="fas fa-network-wired"></i>
+                        <img src="https://images.unsplash.com/photo-1531297484001-80022131f5a1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" 
+                             alt="Infrastructure réseau Cisco"
+                             class="lazy-load"
+                             loading="lazy">
+                        <div class="image-overlay"></div>
                     </div>
                     <div class="projet-content">
                         <h3>Infrastructure Réseau Entreprise</h3>
@@ -1281,7 +1402,11 @@
                 <!-- Projet 2 -->
                 <div class="projet-card fade-in">
                     <div class="projet-image">
-                        <i class="fas fa-shield-alt"></i>
+                        <img src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" 
+                             alt="Salle serveurs et infrastructure"
+                             class="lazy-load"
+                             loading="lazy">
+                        <div class="image-overlay"></div>
                     </div>
                     <div class="projet-content">
                         <h3>Sécurisation Active Directory</h3>
@@ -1300,7 +1425,11 @@
                 <!-- Projet 3 -->
                 <div class="projet-card fade-in">
                     <div class="projet-image">
-                        <i class="fas fa-server"></i>
+                        <img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" 
+                             alt="Virtualisation et cloud computing"
+                             class="lazy-load"
+                             loading="lazy">
+                        <div class="image-overlay"></div>
                     </div>
                     <div class="projet-content">
                         <h3>Virtualisation & Cloud</h3>
@@ -1319,7 +1448,11 @@
                 <!-- Projet 4 -->
                 <div class="projet-card fade-in">
                     <div class="projet-image">
-                        <i class="fas fa-chart-line"></i>
+                        <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" 
+                             alt="Tableau de bord supervision réseau"
+                             class="lazy-load"
+                             loading="lazy">
+                        <div class="image-overlay"></div>
                     </div>
                     <div class="projet-content">
                         <h3>Supervision & Monitoring</h3>
@@ -1350,6 +1483,28 @@
 
             <div class="veille-container fade-in">
                 <h3 class="veille-theme">Thématique : Cybersécurité & Infrastructures Cloud</h3>
+                
+                <!-- Galerie d'images de veille -->
+                <div class="veille-gallery">
+                    <div class="gallery-item">
+                        <img src="https://images.unsplash.com/photo-1614064641938-3bbee52942c7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80" 
+                             alt="Cybersécurité et protection des données"
+                             class="lazy-load"
+                             loading="lazy">
+                    </div>
+                    <div class="gallery-item">
+                        <img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80" 
+                             alt="Cloud computing et virtualisation"
+                             class="lazy-load"
+                             loading="lazy">
+                    </div>
+                    <div class="gallery-item">
+                        <img src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80" 
+                             alt="Infrastructure réseau moderne"
+                             class="lazy-load"
+                             loading="lazy">
+                    </div>
+                </div>
                 
                 <div class="articles-grid">
                     <!-- Carte article 1 -->
@@ -1405,6 +1560,16 @@
                     <p>
                         N'hésitez pas à me contacter pour toute opportunité professionnelle, stage, alternance ou question concernant mon profil. Je serai ravi d'échanger avec vous !
                     </p>
+                    
+                    <!-- Image de contact -->
+                    <div class="image-container mt-2" style="height: 200px;">
+                        <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" 
+                             alt="Collaboration et travail d'équipe IT"
+                             class="lazy-load"
+                             loading="lazy">
+                        <div class="image-overlay"></div>
+                    </div>
+                    
                     <div class="social-links">
                         <a href="mailto:Abraham.emma1906@gmail.com" class="social-link">
                             <div class="social-icon"><i class="fas fa-envelope"></i></div>
@@ -1470,6 +1635,16 @@
                 <span>Abraham EMMANUEL</span>
             </div>
             <p>Étudiant en BTS SIO option SISR • Lycée Gustave Flaubert, Rouen</p>
+            
+            <!-- Image de campus -->
+            <div class="image-container mt-2" style="max-width: 400px; height: 150px;">
+                <img src="https://images.unsplash.com/photo-1523059623039-a9ed027e7fad?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" 
+                     alt="Campus universitaire"
+                     class="lazy-load"
+                     loading="lazy">
+                <div class="image-overlay"></div>
+            </div>
+            
             <div class="footer-links">
                 <a href="#accueil">Accueil</a>
                 <a href="#profil">Profil</a>
@@ -1592,20 +1767,52 @@
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     entry.target.classList.add('fade-in');
+                    
+                    // Lazy loading des images
+                    if (entry.target.tagName === 'IMG' && entry.target.classList.contains('lazy-load')) {
+                        entry.target.classList.add('lazy-loaded');
+                    }
                 }
             });
         }, observerOptions);
         
         // Observer les éléments à animer
-        document.querySelectorAll('.profil-image-container, .projet-card, .article-card, .entreprise-card, .contact-info, .contact-form, .veille-intro, .veille-container').forEach(el => {
+        document.querySelectorAll('.profil-image-container, .projet-card, .article-card, .entreprise-card, .contact-info, .contact-form, .veille-intro, .veille-container, .image-container img').forEach(el => {
             observer.observe(el);
         });
+        
+        // Lazy loading des images
+        const lazyImages = document.querySelectorAll('img.lazy-load');
+        
+        if ('IntersectionObserver' in window) {
+            const imageObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const img = entry.target;
+                        img.classList.add('lazy-loaded');
+                        imageObserver.unobserve(img);
+                    }
+                });
+            });
+            
+            lazyImages.forEach(img => imageObserver.observe(img));
+        } else {
+            // Fallback pour les vieux navigateurs
+            lazyImages.forEach(img => {
+                img.classList.add('lazy-loaded');
+            });
+        }
         
         // Initialisation
         document.addEventListener('DOMContentLoaded', () => {
             // Ajouter la classe fade-in aux éléments déjà visibles
             document.querySelectorAll('.hero-content').forEach(el => {
                 el.classList.add('fade-in');
+            });
+            
+            // Charger les images de la première section immédiatement
+            document.querySelectorAll('#accueil img').forEach(img => {
+                img.classList.add('lazy-loaded');
             });
         });
     </script>
